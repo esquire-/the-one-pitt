@@ -1,7 +1,7 @@
 /*
- * @(#)DistributedBubbleRap.java
+ * @(#)Socleer.java
  *
- * Copyright 2010 by University of Pittsburgh, released under GPLv3.
+ * Modified from DistributedBubbleRap.java: Copyright 2010 by University of Pittsburgh, released under GPLv3.
  * 
  */
 package routing.community;
@@ -13,48 +13,6 @@ import routing.RoutingDecisionEngine;
 
 import java.util.*;
 
-/**
- * <p>Implements the Distributed BubbleRap Routing Algorithm from Hui et al. 
- * 2008 (Bibtex record included for convenience). The paper is a bit fuzzy on 
- * thevactual implementation details. Choices exist for methods of community
- * detection (SIMPLE, K-CLIQUE, MODULARITY) and local centrality approximation
- * (DEGREE, S-WINDOW, C-WINDOW).</p> 
- * 
- * <p>In general, each node maintains an idea of it's local community, a group 
- * of nodes it meets with frequently. It also approximates its centrality within
- * the social network defined by this local community and within the global
- * social network defined by all nodes.</p>
- * 
- * <p>When a node has a message for a destination, D, and D is not part of its 
- * local community, it forwards the message to "more globally central" nodes,
- * those that estimate a higher global centrality value. The intuition here is 
- * that nodes in the center of the social network are more likely to contact the
- * destination. In this fashion the message bubbles up social network to more
- * central nodes until a node is found that reports D in its local community.
- * At this point, the message is only routed with in the nodes of the local 
- * community and propagated towards more locally central nodes or the 
- * destination until delivered.<p>
- * 
- * <pre>
- * \@inproceedings{1374652,
- *	Address = {New York, NY, USA},
- *	Author = {Hui, Pan and Crowcroft, Jon and Yoneki, Eiko},
- *	Booktitle = {MobiHoc '08: Proceedings of the 9th ACM international symposium 
- *		on Mobile ad hoc networking and computing},
- *	Doi = {http://doi.acm.org/10.1145/1374618.1374652},
- *	Isbn = {978-1-60558-073-9},
- *	Location = {Hong Kong, Hong Kong, China},
- *	Pages = {241--250},
- *	Publisher = {ACM},
- *	Title = {BUBBLE Rap: Social-based Forwarding in Delay Tolerant Networks},
- *	Url = {http://portal.acm.org/ft_gateway.cfm?id=1374652&type=pdf&coll=GUIDE&dl=GUIDE&CFID=55195392&CFTOKEN=93998863},
- *	Year = {2008}
- * }
- * </pre>
- * 
- * @author PJ Dillon, University of Pittsburgh
- *
- */
 public class Socleer
 				implements RoutingDecisionEngine, CommunityDetectionEngine
 {
