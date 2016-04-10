@@ -14,7 +14,7 @@ import routing.RoutingDecisionEngine;
 import java.util.*;
 
 public class Socleer
-				implements RoutingDecisionEngine, CommunityDetectionEngine
+				implements RoutingDecisionEngine, routing.community.CommunityDetectionEngine
 {
 	/** Community Detection Algorithm to employ -setting id {@value} */
 	public static final String COMMUNITY_ALG_SETTING = "communityDetectAlg";
@@ -22,10 +22,10 @@ public class Socleer
 	public static final String CENTRALITY_ALG_SETTING = "centralityAlg";
 
 	protected Map<DTNHost, Double> startTimestamps;
-	protected Map<DTNHost, List<Duration>> connHistory;
+	protected Map<DTNHost, List<routing.community.Duration>> connHistory;
 
-	protected CommunityDetection community;
-	protected Centrality centrality;
+	protected routing.community.CommunityDetection community;
+	protected routing.community.Centrality centrality;
 
 	/**
 	 * Constructs a DistributedBubbleRap Decision Engine based upon the settings
@@ -131,7 +131,8 @@ public class Socleer
 		return m.getTo() != thisHost;
 	}
 
-    public static final int SOCLEER_SIZE = 10;
+    public static final int SOCLEER_SIZE = -1; // n, set to -1 for infinite
+    public static final int SOCLEER_DRAW = 5; // 1-10
 
     private int min(int a, int b) {
         if(a > b) {
@@ -146,16 +147,22 @@ public class Socleer
 	public boolean shouldSendMessageToHost(Message m, DTNHost otherHost)
 	{
 		if(m.getTo() == otherHost) return true; // trivial to deliver to final dest
+		int size = SOCLEER_SIZE < 0 ? socleerHosts.size() : SOCLEER_SIZE;
 
         // Socleer (?)
         socleerHosts.sort(new CentralityHost(null, 0d));
+		List<CentralityHost> tmpList = new ArrayList<>(socleerHosts); // Shadow copy
+		tmpList = tmpList.subList(0, min(tmpList.size(), size)); // Create list of grabable elements
 
-        List<CentralityHost> holdingList = socleerHosts.subList(0, min(socleerHosts.size(), SOCLEER_SIZE));
-        List<DTNHost> hostList = new ArrayList<>();
-        for(CentralityHost ch : holdingList) {
-            hostList.add(ch.getHost());
+        List<DTNHost> holdList = new ArrayList<>();
+        Random r = new Random();
+        for(int i = 0; i < SOCLEER_DRAW; i++) { // For each host we're drawing
+            int select = r.nextInt(tmpList.size());
+            holdList.add(tmpList.get(select).getHost());
+			tmpList.remove(select);
         }
-        if(hostList.contains(otherHost)) {
+
+        if(holdList.contains(otherHost)) {
             return true;
         } else {
             return false;
