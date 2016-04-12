@@ -147,6 +147,11 @@ public class Socleer
 	public boolean shouldSendMessageToHost(Message m, DTNHost otherHost)
 	{
 		if(m.getTo() == otherHost) return true; // trivial to deliver to final dest
+
+        if(socleerHosts.size() == 0) {
+            return false; // No place to forward
+        }
+
 		int size = SOCLEER_SIZE < 0 ? socleerHosts.size() : SOCLEER_SIZE;
 
         // Socleer (?)
