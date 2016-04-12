@@ -159,9 +159,11 @@ public class Socleer
 		List<CentralityHost> tmpList = new ArrayList<>(socleerHosts); // Shadow copy
 		tmpList = tmpList.subList(0, min(tmpList.size(), size)); // Create list of grabable elements
 
+
+        int runSize = min(SOCLEER_DRAW, tmpList.size());
         List<DTNHost> holdList = new ArrayList<>();
         Random r = new Random();
-        for(int i = 0; i < SOCLEER_DRAW; i++) { // For each host we're drawing
+        for(int i = 0; i < runSize; i++) { // For each host we're drawing
             int select = r.nextInt(tmpList.size());
             holdList.add(tmpList.get(select).getHost());
 			tmpList.remove(select);
